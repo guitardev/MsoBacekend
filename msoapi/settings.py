@@ -31,12 +31,15 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'main',  # เพิ่ม app ของเรา
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -137,3 +140,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # ยังคงใช้ ModelBackend เผื่อไว้ในกรณีที่ต้องการ
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+  # อนุญาตให้โดเมนนี้ส่ง request มาได้
+    # เพิ่มโดเมนอื่นๆ ได้ตามต้องการ
+]
