@@ -2,7 +2,8 @@
 
 from pathlib import Path
 from dotenv import load_dotenv
-import os
+import os 
+from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,6 +33,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'main',  # เพิ่ม app ของเรา
     'corsheaders',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -101,7 +103,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'th'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
@@ -133,6 +135,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 AUTH_USER_MODEL  = 'main.CustomUser'  # กำหนด custom user model (เราจะสร้างในภายหลัง)
 AUTHENTICATION_BACKENDS = [
@@ -142,6 +145,32 @@ AUTHENTICATION_BACKENDS = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'http://127.0.0.1:3000'
   # อนุญาตให้โดเมนนี้ส่ง request มาได้
     # เพิ่มโดเมนอื่นๆ ได้ตามต้องการ
 ]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'MSO Virtual Data API',  # ชื่อของ API ของคุณ
+    'DESCRIPTION': 'เอกสารกำกับการใช้ API for MSO data Project',  # คำอธิบาย API
+    'VERSION': '1.0.0',  # เวอร์ชันของ API
+     'SERVERS': [
+    #     {'url': 'https://example.com', 'description': 'Production server'},
+         {'url': 'http://127.0.0.1:8000', 'description': 'Local development server'},
+     ],  # กำหนด servers หากจำเป็น
+}
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # ปรับเวลาตามความเหมาะสม
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=5),     # ปรับเวลาตามความเหมาะสม
+    'ROTATE_REFRESH_TOKENS': True,                   # สร้าง refresh token ใหม่ทุกครั้งที่มีการ refresh
+    'BLACKLIST_AFTER_ROTATION': True,                # เพิ่ม token เก่าลงใน blacklist หลังจาก rotate
+    'UPDATE_LAST_LOGIN': True,                       # อัปเดต last_login ของผู้ใช้ทุกครั้งที่ใช้งาน token
+    'ALGORITHM': 'HS256',                             # อัลกอริทึมสำหรับการเข้ารหัส (สามารถเปลี่ยนเป็น RS256 หากต้องการความปลอดภัยสูงขึ้น)
+    #'SIGNING_KEY': env('SIGNING_KEY'),                # กุญแจสำหรับการเข้ารหัส (ควรเก็บเป็นความลับ)
+    'AUTH_HEADER_TYPES': ('Bearer',),                 # ประเภทของ header สำหรับการส่ง token
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',         # ชื่อของ header สำหรับการส่ง token
+    'USER_ID_FIELD': 'id',                            # ฟิลด์ที่ใช้ระบุผู้ใช้ใน token
+    'USER_ID_CLAIM': 'user_id',                       # ชื่อของ claim ที่เก็บ ID ของผู้ใช้
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',                 # ชื่อของ claim ที่เก็บประเภทของ token
+}

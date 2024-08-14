@@ -7,7 +7,7 @@ from .views import UserViewSet, ProfileViewSet, LoginMethodViewSet, CustomTokenO
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'profile', ProfileViewSet, basename='profile')
-router.register(r'login-methods', LoginMethodViewSet, basename='login-method')
+router.register(r'login', LoginMethodViewSet, basename='login')
 
 urlpatterns = [
     path('', include(router.urls)),
